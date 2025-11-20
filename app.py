@@ -38,8 +38,6 @@ def predict_los(examples: dict):
     # but you might want to re-enable it for strict input validation.
     assert all(k in dummy_data.keys() for k in examples) and all(k in examples.keys() for k in dummy_data), f"You must have all these keys in the example: {dummy_data.keys()}"
 
-    examples = {k: [examples[k]] for k in examples}
-
     dummy_df = pd.DataFrame([examples]) # Wrap examples in a list to create a DataFrame with one row
 
     # Convert 'date' column to datetime objects (important for consistency with X if date is used as feature)
@@ -63,7 +61,7 @@ def api_predict_los():
             prediction = predict_los(data)
             return jsonify({'predicted_los': prediction}), 200
         except Exception as e:
-            return jsonify({'error': str(e), 'type': str(type(e))}), 400
+            return jsonify({'error': str(e), 'type': str(type(e)), 'traceback': str(e.__traceback__)}), 400
     else:
         return jsonify({'error': 'Request must be JSON'}), 400
 
