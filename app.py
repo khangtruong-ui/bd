@@ -36,7 +36,7 @@ def period_to_time(period_str):
 def predict_los(examples: dict):
     # This assertion is commented out for more flexible API usage, 
     # but you might want to re-enable it for strict input validation.
-    assert all(k in dummy_data.keys() for k in examples), f"You must have all these keys in the example: {dummy_data.keys()}"
+    assert all(k in dummy_data.keys() for k in examples) and all(k in examples.keys() for k in dummy_data), f"You must have all these keys in the example: {dummy_data.keys()}"
 
     dummy_df = pd.DataFrame([examples]) # Wrap examples in a list to create a DataFrame with one row
 
