@@ -61,7 +61,7 @@ def api_predict_los():
             prediction = predict_los(data)
             return jsonify({'predicted_los': prediction}), 200
         except Exception as e:
-            return jsonify({'error': str(e)}), 400
+            return jsonify({'error': str(e), 'type': str(type(e))}), 400
     else:
         return jsonify({'error': 'Request must be JSON'}), 400
 
