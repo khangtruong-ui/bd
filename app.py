@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from datetime import time
 import joblib
+import traceback
 
 # Load the model and encoder (assuming they are already saved and loaded in the notebook)
 # If running this Flask app in a separate environment, ensure these files are accessible
@@ -61,7 +62,7 @@ def api_predict_los():
             prediction = predict_los(data)
             return jsonify({'predicted_los': prediction}), 200
         except Exception as e:
-            return jsonify({'error': str(e), 'type': str(type(e)), 'traceback': str(e.__traceback__)}), 400
+            return jsonify({'error': str(e), 'type': str(type(e)), 'traceback': str(traceback.extract_tb(e.__traceback__)[-1].lineno)}), 400
     else:
         return jsonify({'error': 'Request must be JSON'}), 400
 
