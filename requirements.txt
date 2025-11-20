@@ -1,5 +1,5 @@
 flash
-sklearn
+scikit-learn
 numpy
 pandas
 joblib
