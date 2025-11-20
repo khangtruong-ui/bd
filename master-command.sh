@@ -1,1 +1,1 @@
-curl -X POST -H "Content-Type: application/json" -d '{"date": "2021-04-11", "weekday": 4, "period": "period_0_30", "length": "116", "max_velocity": 40, "street_level": 4, "street_name": "18", "street_type": "tertiary"}' http://localhost:5000
+curl -X POST -H "Content-Type: application/json" -d '{"date": "2021-04-11", "weekday": 4, "period": "period_0_30", "length": "116", "max_velocity": 40, "street_level": 4, "street_name": "18", "street_type": "tertiary"}' https://vehicles-prediction-442068653515.us-central1.run.app
