@@ -42,7 +42,7 @@ def predict_los(examples: dict):
     dummy_df = pd.DataFrame([examples]) # Wrap examples in a list to create a DataFrame with one row
 
     # Convert 'date' column to datetime objects (important for consistency with X if date is used as feature)
-    dummy_df['date'] = pd.to_datetime(dummy_df['date']).dt.strftime('%Y-%m-%d')
+    dummy_df['date'] = pd.to_datetime(dummy_df['date']).astype(int)
 
     # Apply the period_to_time function to create the 'period_time' column
     dummy_df['period_time'] = dummy_df['period'].apply(period_to_time)
