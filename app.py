@@ -54,7 +54,7 @@ def predict_los(examples: dict):
     results = predicted_los_category[0][0]
     return results
 
-@app.route('/predict_los', methods=['POST'])
+@app.route('/', methods=['POST'])
 def api_predict_los():
     if request.is_json:
         data = request.get_json()
