@@ -12,6 +12,17 @@ enc = joblib.load('enc.joblib')
 
 app = Flask(__name__)
 
+dummy_data = {
+    'date': ['2021-04-16'],
+    'weekday': [4],
+    'period': ['period_0_30'],
+    'length': [116],
+    'max_velocity': [40.0],
+    'street_level': [4],
+    'street_name': ['Nguyễn Văn Bá'],
+    'street_type': ['tertiary'],
+}
+
 # Re-define period_to_time function for completeness within the Flask context
 def period_to_time(period_str):
   if isinstance(period_str, str):
