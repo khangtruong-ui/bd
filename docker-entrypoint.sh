@@ -14,5 +14,7 @@ echo "PostgreSQL started. Running Python loader..."
 # Run Python loader in virtual environment
 /opt/venv/bin/python3 /docker-entrypoint-initdb.d/init_db.py
 
-# Keep the container running with PostgreSQL
-fg %1
+echo "Loader finished. PostgreSQL continues running in background."
+
+# Keep container alive by waiting on postgres process
+wait
