@@ -2,7 +2,7 @@ FROM mysql:8
 
 # MySQL env
 ENV MYSQL_ROOT_PASSWORD=root
-ENV MYSQL_DATABASE=root
+ENV MYSQL_DATABASE=traffic
 
 # Install Python and required packages
 RUN apt-get update && \
