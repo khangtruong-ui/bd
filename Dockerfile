@@ -1,13 +1,22 @@
-FROM python:3.11-slim-bookworm
+FROM mysql:8
 
-WORKDIR /app
+# MySQL env
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=root
 
-COPY requirements.txt .
+# Install Python and required packages
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip && \
+    pip3 install --upgrade pip
 
-RUN pip install -r requirements.txt -q
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
 
-COPY . /app
+# Copy loader script
+COPY load_data.py /docker-entrypoint-initdb.d/load_data.py
 
-EXPOSE 5000
+# Make sure script is executable
+RUN chmod +x /docker-entrypoint-initdb.d/load_data.py
 
-CMD python app.py
+# Expose for remote access
+EXPOSE 3306
