@@ -1,4 +1,4 @@
 pandas
 sqlalchemy
-pymysql
+psycopg2-binary
 kagglehub[pandas-datasets]
