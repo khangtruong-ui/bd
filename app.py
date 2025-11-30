@@ -8,7 +8,7 @@ app = FastAPI()
 # Database config
 DB_USER = "khang"
 DB_PASSWORD = ""  # replace with your password
-DB_HOST = "localhost"
+DB_HOST = "database"
 DB_PORT = 5432
 DB_NAME = "trafficdb"
 
