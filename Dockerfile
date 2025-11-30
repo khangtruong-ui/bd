@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bookworm
+FROM khangtruong1108/postgresql
 
 WORKDIR /app
 
