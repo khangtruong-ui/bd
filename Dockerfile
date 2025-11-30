@@ -6,8 +6,8 @@ COPY requirements.txt .
 
 RUN pip install -r requirements.txt -q
 
-COPY . /app
+COPY app.py /app
 
-EXPOSE 5000
+EXPOSE 8000
 
 CMD python app.py
