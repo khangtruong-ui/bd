@@ -19,7 +19,7 @@ DEMO_QUERY = "SELECT * FROM traffic_data LIMIT 10;"
 async def get_pool():
     return await asyncpg.create_pool(
         user=DB_USER,
-        password=DB_PASSWORD,
+        # password=DB_PASSWORD,
         database=DB_NAME,
         host=DB_HOST,
         port=DB_PORT
