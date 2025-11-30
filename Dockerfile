@@ -2,21 +2,21 @@ FROM mysql:8
 
 # MySQL env
 ENV MYSQL_ROOT_PASSWORD=root
-ENV MYSQL_DATABASE=traffic
+ENV MYSQL_DATABASE=trafficdb
 
-# Install Python and required packages
-RUN apt update && \
-    apt install -y python3 python3-pip && \
-    pip3 install --upgrade pip
+# Install Python + pip using microdnf (Oracle Linux)
+RUN microdnf install -y python3 python3-pip && \
+    microdnf clean all
 
+# Upgrade pip (works normally)
+RUN pip3 install --upgrade pip
+
+# Copy requirements and install Python deps
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
 
-# Copy loader script
+# Copy Python preload script
 COPY load_data.py /docker-entrypoint-initdb.d/load_data.py
-
-# Make sure script is executable
 RUN chmod +x /docker-entrypoint-initdb.d/load_data.py
 
-# Expose for remote access
 EXPOSE 3306
