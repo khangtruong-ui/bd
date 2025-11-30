@@ -5,8 +5,8 @@ ENV MYSQL_ROOT_PASSWORD=root
 ENV MYSQL_DATABASE=traffic
 
 # Install Python and required packages
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
+RUN apt update && \
+    apt install -y python3 python3-pip && \
     pip3 install --upgrade pip
 
 COPY requirements.txt /tmp/requirements.txt
