@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY requirements.txt .
 
+RUN python3 -m venv venv && source venv/bin/activate
+
 RUN pip install -r requirements.txt -q
 
 COPY app.py /app
