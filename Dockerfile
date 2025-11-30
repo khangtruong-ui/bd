@@ -1,7 +1,7 @@
 FROM mysql:8
 
 # MySQL env
-ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_ROOT_PASSWORD=rootpass
 ENV MYSQL_DATABASE=trafficdb
 
 # Install Python + pip using microdnf (Oracle Linux)
