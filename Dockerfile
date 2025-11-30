@@ -1,4 +1,4 @@
-FROM khangtruong1108/postgresql
+FROM khangtruong1108/postgresql:1.0
 
 WORKDIR /app
 
