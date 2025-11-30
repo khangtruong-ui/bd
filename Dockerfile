@@ -1,10 +1,8 @@
-FROM khangtruong1108/postgresql:1.0
+FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 
 COPY requirements.txt .
-
-RUN python3 -m venv venv && source venv/bin/activate
 
 RUN pip install -r requirements.txt -q
 
