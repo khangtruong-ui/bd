@@ -1,73 +1,47 @@
-from flask import Flask, request, jsonify
-import pandas as pd
-import numpy as np
-from datetime import time
-import joblib
-import traceback
+# app.py
+from fastapi import FastAPI
+import asyncio
+import asyncpg
 
-# Load the model and encoder (assuming they are already saved and loaded in the notebook)
-# If running this Flask app in a separate environment, ensure these files are accessible
-# and loaded as shown in the previous cells.
-model = joblib.load('pipeline.joblib')
-enc = joblib.load('enc.joblib')
+app = FastAPI()
 
-app = Flask(__name__)
+# Database config
+DB_USER = "khang"
+DB_PASSWORD = "your_password_here"  # replace with your password
+DB_HOST = "localhost"
+DB_PORT = 5432
+DB_NAME = "trafficdb"
 
-dummy_data = {
-    'date': ['2021-04-16'],
-    'weekday': [4],
-    'period': ['period_0_30'],
-    'length': [116],
-    'max_velocity': [40.0],
-    'street_level': [4],
-    'street_name': ['Nguyễn Văn Bá'],
-    'street_type': ['tertiary'],
-}
+# Demo query
+DEMO_QUERY = "SELECT * FROM traffic_data LIMIT 10;"
 
-# Re-define period_to_time function for completeness within the Flask context
-def period_to_time(period_str):
-  if isinstance(period_str, str):
-    parts = period_str.replace('period_', '').split('_')
-    hour = int(parts[0])
-    minute = int(parts[1])
-    return time(hour, minute, 0)
-  return None
+# Initialize a connection pool
+async def get_pool():
+    return await asyncpg.create_pool(
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME,
+        host=DB_HOST,
+        port=DB_PORT
+    )
 
-# Re-define predict_los function for completeness within the Flask context
-def predict_los(examples: dict):
-    # This assertion is commented out for more flexible API usage, 
-    # but you might want to re-enable it for strict input validation.
-    assert all(k in dummy_data.keys() for k in examples) and all(k in examples.keys() for k in dummy_data), f"You must have all these keys in the example: {dummy_data.keys()}"
+# We will store the pool in app state
+@app.on_event("startup")
+async def startup():
+    app.state.pool = await get_pool()
 
-    dummy_df = pd.DataFrame([examples]) # Wrap examples in a list to create a DataFrame with one row
+@app.on_event("shutdown")
+async def shutdown():
+    await app.state.pool.close()
 
-    # Convert 'date' column to datetime objects (important for consistency with X if date is used as feature)
-    dummy_df['date'] = pd.to_datetime(dummy_df['date']).astype(int)
+@app.get("/traffic")
+async def get_traffic():
+    async with app.state.pool.acquire() as connection:
+        rows = await connection.fetch(DEMO_QUERY)
+        # Convert asyncpg records to dicts
+        results = [dict(row) for row in rows]
+    return {"data": results}
 
-    # Apply the period_to_time function to create the 'period_time' column
-    dummy_df['period_time'] = dummy_df['period'].apply(period_to_time)
-
-    predicted_los_numerical = model.predict(dummy_df)
-    predicted_los_clipped = np.clip(predicted_los_numerical, 0., 5.9)
-    predicted_los_category = enc.inverse_transform(predicted_los_clipped)
-
-    results = predicted_los_category[0][0]
-    return results
-
-@app.route('/', methods=['POST'])
-def api_predict_los():
-    if request.is_json:
-        data = request.get_json()
-        try:
-            prediction = predict_los(data)
-            return jsonify({'predicted_los': prediction}), 200
-        except Exception as e:
-            return jsonify({'error': str(e), 'type': str(type(e)), 'traceback': str(traceback.extract_tb(e.__traceback__)[-1].lineno)}), 400
-            raise e
-    else:
-        return jsonify({'error': 'Request must be JSON'}), 400
-
-if __name__ == '__main__':
-    # In Colab, you might need to use a tool like ngrok to expose your app
-    # For local testing, you can run this directly.
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
